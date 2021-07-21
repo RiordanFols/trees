@@ -2,6 +2,8 @@ package ru.chernov.tree;
 
 import lombok.Getter;
 
+import java.util.*;
+
 /**
  * @author Pavel Chernov
  */
@@ -12,6 +14,16 @@ public class Tree<V> {
 
     public Tree(Node<V> root) {
         this.root = root;
+    }
+
+    public Tree(Collection<Node<V>> nodes) {
+        List<Node<V>> list = new ArrayList<>(nodes);
+        list.sort(Comparator.comparing(Node::getKey));
+        this.root = list.get(list.size() / 2);
+        nodes.remove(this.root);
+
+        for (var node : nodes)
+            put(node.getKey(), node.getValue());
     }
 
     public Node<V> getNode(int key) {
@@ -27,8 +39,8 @@ public class Tree<V> {
     }
 
     public void put(int key, V value) {
-        Node<V> cursor = root;
-        while (cursor.getKey() != key && !cursor.isLeaf())
+        Node<V> cursor = this.root;
+        while (cursor.getKey() != key && cursor.getNext(key) != null)
             cursor = cursor.getNext(key);
 
         // update
@@ -37,7 +49,7 @@ public class Tree<V> {
             return;
         }
 
-        if (cursor.isLeaf()) {
+        if (cursor.getNext(key) == null) {
             Node<V> newNode = new Node<>(key, value, null, null);
             if (cursor.getKey() > key)
                 cursor.setLeft(newNode);
@@ -90,5 +102,23 @@ public class Tree<V> {
 
     public boolean isRoot(int key) {
         return getNode(key).equals(root);
+    }
+
+    public void goThrow() {
+        Scanner scanner = new Scanner(System.in);
+        Node<V> cursor = this.root;
+        while (cursor != null && !cursor.isLeaf()) {
+            System.out.println(cursor.getKey());
+            String command = scanner.next();
+            switch (command.trim()) {
+                case "0" -> cursor = cursor.getLeft();
+                case "1" -> cursor = cursor.getRight();
+                default -> System.out.println("Enter 0 or 1");
+            }
+        }
+        if (cursor == null)
+            System.out.println("No node here");
+        else
+            System.out.println("You get to leaf: " + cursor.getKey());
     }
 }
