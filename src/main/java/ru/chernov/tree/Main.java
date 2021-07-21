@@ -21,11 +21,20 @@ public class Main {
         Node<String> root = new Node<>(10, "Root", rootL, rootR);
 
         Tree<String> tree = new Tree<>(root);
+
+        // get
 //        System.out.println(tree.get(17).getValue());
 
-        tree.put(42, "New element");
-        System.out.println(tree.get(99).getLeft().getValue());
+        // put
+//        tree.put(42, "New element");
+//        System.out.println(tree.getNode(99).getLeft().getValue());
 
-//        System.out.println(tree.getParentOfNode(20).getKey());
+        // get parent
+//        System.out.println(tree.getParent(20).getKey());
+
+        // delete
+        tree.delete(35);
+        System.out.println(tree.getNode(10).getRight().getKey());
+
     }
 }

@@ -14,7 +14,7 @@ public class Tree<V> {
         this.root = root;
     }
 
-    public Node<V> get(int key) {
+    public Node<V> getNode(int key) {
         Node<V> cursor = root;
         while (cursor != null)
             if (cursor.getKey() == key)
@@ -47,18 +47,36 @@ public class Tree<V> {
     }
 
     public boolean contains(int key) {
-        return get(key) != null;
+        return getNode(key) != null;
     }
 
     public void delete(int key) {
-        // todo:
-        // cases:
-        // if leaf
-        // if has 1 child
-        // if has 2 childes
+        if (isRoot(key))
+            throw new IllegalArgumentException("Cannot delete root of a tree");
+
+        Node<V> node = getNode(key);
+        Node<V> parent = getParent(key);
+        switch (node.getNChildren()) {
+            case 0 -> parent.replaceChild(node, null);
+
+            case 1 -> {
+                Node<V> child = (node.getLeft() == null) ? node.getRight() : node.getLeft();
+                parent.replaceChild(node, child);
+            }
+
+            case 2 -> {
+                Node<V> rightMinimumNode = node.getRightSubtreeMinimum();
+                delete(rightMinimumNode.getKey());
+
+                rightMinimumNode.setLeft(node.getLeft());
+                rightMinimumNode.setRight(node.getRight());
+
+                parent.replaceChild(node, rightMinimumNode);
+            }
+        }
     }
 
-    public Node<V> getParentOfNode(int nodeKey) {
+    public Node<V> getParent(int nodeKey) {
         Node<V> cursor = root;
         while (!cursor.isLeaf())
             if (cursor.getLeft().getKey() == nodeKey || cursor.getRight().getKey() == nodeKey)
@@ -70,4 +88,7 @@ public class Tree<V> {
         return null;
     }
 
+    public boolean isRoot(int key) {
+        return getNode(key).equals(root);
+    }
 }
