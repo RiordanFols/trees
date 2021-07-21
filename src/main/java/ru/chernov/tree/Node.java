@@ -25,6 +25,11 @@ public class Node<V> {
         this.right = right;
     }
 
+    public Node(int key, V value) {
+        this.key = key;
+        this.value = value;
+    }
+
     public Node<V> getNext(int key) {
         return (this.key > key) ? this.left : this.right;
     }
