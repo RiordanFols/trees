@@ -17,7 +17,7 @@ public class TreeToStringConverter {
             treeString.append(formatLineString(matrix.get(i))).append("\n");
         }
 
-        return treeString.reverse().toString();
+        return treeString.toString();
     }
 
     public static <V> String formatLineString(List<Node<V>> list) {
