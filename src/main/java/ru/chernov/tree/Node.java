@@ -34,16 +34,24 @@ public class Node<V> {
         return (this.key > key) ? this.left : this.right;
     }
 
+    public boolean hasLeft() {
+        return this.left != null;
+    }
+
+    public boolean hasRight() {
+        return this.right != null;
+    }
+
     public boolean isLeaf() {
         return this.getNChildren() == 0;
     }
 
     public int getNChildren() {
-        return (this.left != null ? 1 : 0) + (this.right != null ? 1 : 0);
+        return (hasLeft() ? 1 : 0) + (hasRight() ? 1 : 0);
 
     }
 
-    public Node<V> getRightSubtreeMinimum() {
+    public Node<V> getRightSubtreeMinimumNode() {
         Node<V> cursor = this.getRight();
         while (!cursor.isLeaf())
             cursor = cursor.getLeft();
@@ -56,5 +64,18 @@ public class Node<V> {
             this.setLeft(newChild);
         else
             this.setRight(newChild);
+    }
+
+    public int getHeightOfSubtree() {
+
+        int heightLeft = this.hasLeft() ? this.getLeft().getHeightOfSubtree() : 0;
+        int heightRight = this.hasRight() ? this.getRight().getHeightOfSubtree() : 0;
+
+        return 1 + Math.max(heightLeft, heightRight);
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(this.key);
     }
 }
