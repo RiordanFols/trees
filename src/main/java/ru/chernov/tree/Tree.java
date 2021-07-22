@@ -17,6 +17,9 @@ public class Tree<V> {
     }
 
     public Tree(Collection<Node<V>> nodes) {
+        if (nodes.size() < 2)
+            throw new IllegalArgumentException("Tree should contains at least 2 nodes");
+
         List<Node<V>> list = new ArrayList<>(nodes);
         list.sort(Comparator.comparing(Node::getKey));
         this.root = list.get(list.size() / 2);
@@ -77,7 +80,7 @@ public class Tree<V> {
             }
 
             case 2 -> {
-                Node<V> rightMinimumNode = node.getRightSubtreeMinimum();
+                Node<V> rightMinimumNode = node.getRightSubtreeMinimumNode();
                 delete(rightMinimumNode.getKey());
 
                 rightMinimumNode.setLeft(node.getLeft());
@@ -120,5 +123,18 @@ public class Tree<V> {
             System.out.println("No node here");
         else
             System.out.println("You get to leaf: " + cursor.getKey());
+    }
+
+    public int getHeight() {
+        return this.root.getHeightOfSubtree();
+    }
+
+    @Override
+    public String toString() {
+        return TreeToStringConverter.getAsArray(this);
+    }
+
+    public String toStringAsTree() {
+        return TreeToStringConverter.getAsTree(this);
     }
 }
